@@ -120,3 +120,13 @@
 ;; Part 1 solution
 ;; (fold + 0 (map car (filter filter-impossible-games (apply-to-input "2.txt" get-game-info get-max-cubes-from-game))))
 ;; 2105
+
+(define (power-of-cubes game)
+  (let ((cubes (cdr game)))
+    (fold (lambda (cube result)
+            (* result (cdr cube)))
+          1
+          cubes)))
+
+;; Part 2 solution
+;; (fold + 0 (apply-to-input "2.txt" get-game-info get-max-cubes-from-game power-of-cubes))
