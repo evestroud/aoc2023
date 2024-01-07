@@ -60,3 +60,30 @@
   (round (expt 2 (1- card))))
 
 ; Solution (fold + 0 (map score-card (map winning-numbers-in-card input)))
+
+; Part 2
+
+(define (part-two input)
+  (let* ((matches-in-cards (map winning-numbers-in-card input))
+         (counts-of-cards (list '() (make-list (length input) 1)))
+         (final-counts
+          (car
+           (fold (lambda (matches counts)
+                   (let* ((completed (first counts))
+                          (upcoming (second counts))
+                          (current-count (car upcoming))
+                          (completed-next (if (null? upcoming)
+                                              completed
+                                              (cons (car upcoming) completed)))
+                          (upcoming-next (if (null? upcoming)
+                                             upcoming
+                                             (increment-next-n-items current-count matches (cdr upcoming)))))
+                     (list completed-next upcoming-next)))
+                 counts-of-cards
+                 matches-in-cards))))
+    (apply + final-counts)))
+
+(define (increment-next-n-items inc n ls)
+  (if (or (null? ls) (= 0 n))
+      ls
+      (cons (+ inc (car ls)) (increment-next-n-items inc (1- n) (cdr ls)))))
